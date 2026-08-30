@@ -1,0 +1,5 @@
+product_id,material_id,material_name,require_num
+P001,M001,轴承,2
+P001,M002,传动轴,1
+P002,M002,传动轴,2
+P002,M003,密封垫圈,4
