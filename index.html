@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>BOM智能解析·物料替代推理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            padding:20px;
+        }
+        .container{
+            max-width:1300px;
+            margin:0 auto;
+        }
+        .header{
+            font-size:22px;
+            font-weight:bold;
+            margin-bottom:20px;
+        }
+        .upload-area{
+            background:#fff;
+            padding:16px;
+            border-radius:8px;
+            margin-bottom:20px;
+            box-shadow:0 1px 6px #00000015;
+        }
+        table{
+            width:100%;
+            border-collapse: collapse;
+            background:#fff;
+            box-shadow:0 1px 6px #00000015;
+            border-radius:8px;
+            overflow:hidden;
+        }
+        th,td{
+            border:1px solid #e2e8f0;
+            padding:10px;
+            text-align:center;
+        }
+        th{
+            background:#e8edf6;
+        }
+        .lack{
+            background:#ffe9e9;
+            color:#c22424;
+        }
+        .btn{
+            padding:8px 18px;
+            background:#2b549c;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">BOM智能解析·物料替代推理</div>
+
+    <div class="upload-area">
+        <!-- 文件上传控件 -->
+        <input type="file" id="csvFileInput" accept=".csv"/>
+        <button class="btn" onclick="handleFile()">读取CSV并齐套计算</button>
+        <div style="margin-top:10px;color:#444;">
+CSV格式要求（表头必须和下面一模一样）：
+`产品,物料,需求,库存,安全库存`
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>产品</th>
+                <th>物料</th>
+                <th>需求</th>
+                <th>库存</th>
+                <th>安全库存</th>
+                <th>缺口</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <tr>
+                <td colspan="6">请选择CSV文件点击按钮加载数据</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+const fileInput = document.getElementById('csvFileInput');
+const tableBody = document.getElementById('tableBody');
+
+// 点击按钮触发读取
+function handleFile(){
+    const file = fileInput.files[0];
+    if(!file){
+        alert("请先选择一个csv文件！");
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e){
+        const text = e.target.result;
+        parseCsv(text);
+    }
+    reader.readAsText(file,"utf-8");
+}
+
+//解析CSV文本，计算缺口渲染表格
+function parseCsv(text){
+    const lines = text.trim().split('\n');
+    tableBody.innerHTML = "";
+    //跳过表头第一行
+    for(let i=1;i<lines.length;i++){
+        const row = lines[i].split(',');
+        if(row.length<5) continue;
+        const product = row[0].trim();
+        const material = row[1].trim();
+        const need = Number(row[2]);
+        const stock = Number(row[3]);
+        const safeStock = Number(row[4]);
+        //核心公式：缺口 = 需求 +安全库存 −库存
+        const gap = need + safeStock - stock;
+
+        const tr = document.createElement('tr');
+        if(gap>0){
+            tr.className = "lack";
+        }
+        tr.innerHTML = `
+            <td>${product}</td>
+            <td>${material}</td>
+            <td>${need}</td>
+            <td>${stock}</td>
+            <td>${safeStock}</td>
+            <td>${gap}</td>
+        `
+        tableBody.appendChild(tr);
+    }
+}
+</script>
+</body>
+</html>
