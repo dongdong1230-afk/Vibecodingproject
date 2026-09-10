@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOM智能解析与物料替代方案推理系统</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/libs/element-plus.css">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/libs/vue.min.js"></script>
+  <script src="/libs/element-plus.min.js"></script>
+  <script src="/libs/echarts.min.js"></script>
+  <script src="/libs/axios.min.js"></script>
+</head>
+<body>
+  <div id="app" v-cloak>
+    <el-container class="layout">
+      <!-- 侧边栏 -->
+      <el-aside width="220px" class="sidebar">
+        <div class="brand">
+          <div class="brand-icon">B</div>
+          <div class="brand-text">
+            <div class="brand-title">BOM智能替代系统</div>
+            <div class="brand-sub">BOM Substitution AI</div>
+          </div>
+        </div>
+        <el-menu :default-active="page" @select="switchPage" class="menu">
+          <el-menu-item index="bom">
+            <span class="menu-ico">📦</span> BOM 管理
+          </el-menu-item>
+          <el-menu-item index="risk">
+            <span class="menu-ico">⚠️</span> 风险识别
+          </el-menu-item>
+          <el-menu-item index="substitution">
+            <span class="menu-ico">🔍</span> 替代推理
+          </el-menu-item>
+          <el-menu-item index="compare">
+            <span class="menu-ico">⚖️</span> 方案对比
+          </el-menu-item>
+          <el-menu-item index="history">
+            <span class="menu-ico">🕘</span> 方案历史
+          </el-menu-item>
+          <el-menu-item index="dashboard">
+            <span class="menu-ico">📊</span> 数据看板
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+
+      <!-- 主内容区 -->
+      <el-main class="main">
+        <!-- 顶部业务闭环步骤条 -->
+        <div class="flow-bar">
+          <div class="flow-step" :class="{on: stepOn('bom')}">① BOM录入解析</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" :class="{on: stepOn('risk')}">② 风险物料识别</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" :class="{on: stepOn('substitution')}">③ 替代物料推理</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" :class="{on: stepOn('compare')}">④ 方案综合评估</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" :class="{on: stepOn('history')}">⑤ 方案保存与回溯</div>
+        </div>
+
+        <bom-page v-show="page==='bom'"></bom-page>
+        <risk-page v-show="page==='risk'"></risk-page>
+        <substitution-page v-show="page==='substitution'"></substitution-page>
+        <compare-page v-show="page==='compare'"></compare-page>
+        <history-page v-show="page==='history'"></history-page>
+        <dashboard-page v-show="page==='dashboard'"></dashboard-page>
+      </el-main>
+    </el-container>
+  </div>
+
+  <script src="/assets/components.js"></script>
+  <script src="/assets/pages2.js"></script>
+  <script src="/assets/app.js"></script>
+</body>
+</html>

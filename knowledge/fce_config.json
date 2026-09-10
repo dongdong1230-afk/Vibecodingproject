@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "name": "替代方案模糊综合评价(FCE)配置",
+    "version": "1.0",
+    "description": "五指标模糊综合评价: 采购成本/供货交期/性能匹配度/工艺兼容性/历史故障率。评语集 V={优,良,中,差}, 分值 [100,80,60,40]; 隶属度函数为半梯形+三角形; 权重 = AHP 判断矩阵 × 熵权 乘法合成; 模糊算子为加权平均型 M(·,+)"
+  },
+  "indicators": [
+    {"key": "perf_match", "name": "性能匹配度", "type": "benefit", "unit": "", "source": "本体参数覆盖裕度评分"},
+    {"key": "process_compat", "name": "工艺兼容性", "type": "benefit", "unit": "", "source": "封装/安装尺寸等类别属性匹配率"},
+    {"key": "cost", "name": "采购成本", "type": "cost", "unit": "元", "source": "unit_price"},
+    {"key": "lead_time", "name": "供货交期", "type": "cost", "unit": "天", "source": "lead_time_days"},
+    {"key": "failure_rate", "name": "历史故障率", "type": "cost", "unit": "ppm", "source": "failure_rate_ppm"}
+  ],
+  "grades": {"优": 100, "良": 80, "中": 60, "差": 40},
+  "membership": {
+    "优": {"type": "trapmf", "params": [0.7, 0.85, 1.0, 1.0]},
+    "良": {"type": "trimf", "params": [0.5, 0.7, 0.85]},
+    "中": {"type": "trimf", "params": [0.3, 0.5, 0.7]},
+    "差": {"type": "trapmf", "params": [0.0, 0.0, 0.3, 0.5]}
+  },
+  "ahp_matrix": [
+    [1.0, 2.0, 3.0, 4.0, 5.0],
+    [0.5, 1.0, 2.0, 3.0, 4.0],
+    [0.333, 0.5, 1.0, 2.0, 3.0],
+    [0.25, 0.333, 0.5, 1.0, 2.0],
+    [0.2, 0.25, 0.333, 0.5, 1.0]
+  ],
+  "ri": {"1": 0.0, "2": 0.0, "3": 0.58, "4": 0.9, "5": 1.12},
+  "mode": "combined"
+}
