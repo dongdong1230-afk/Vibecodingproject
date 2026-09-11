@@ -27,15 +27,17 @@ class RulLSTM(nn.Module):
             dropout=dropout if layers > 1 else 0.0,
         )
         self.head = nn.Sequential(
-            nn.Linear(hidden, 32),
+            nn.Linear(hidden * 2, 32),
             nn.ReLU(),
             nn.Linear(32, 1),
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out, _ = self.lstm(x)  # (B, W, hidden)
-        out = out[:, -1, :]  # 取最后一个时间步
-        return self.head(out).squeeze(-1)
+        last = out[:, -1, :]  # 最后时间步
+        mean = out.mean(dim=1)  # 全局平均池化，保留整体退化信息
+        fused = torch.cat([last, mean], dim=1)
+        return self.head(fused).squeeze(-1)
 
 
 def train_lstm(
@@ -64,6 +66,9 @@ def train_lstm(
 
     model = RulLSTM(n_features=X.shape[2], hidden=hidden, layers=layers)
     opt = torch.optim.Adam(model.parameters(), lr=lr)
+    sched = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        opt, mode="min", factor=0.5, patience=5
+    )
     loss_fn = nn.MSELoss()
 
     best_va, best_state = float("inf"), None
@@ -84,6 +89,7 @@ def train_lstm(
         model.eval()
         with torch.no_grad():
             va_loss = loss_fn(model(X_va), y_va).item()
+        sched.step(va_loss)
         if va_loss < best_va:
             best_va = va_loss
             best_state = {k: v.clone() for k, v in model.state_dict().items()}

@@ -84,7 +84,13 @@
     制造智能技术课程设计 · NASA C-MAPSS 数据集 · FastAPI + PyTorch LSTM
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="/static/vendor/echarts.min.js"></script>
+  <script>
+    // CDN 兜底：本地图表库加载失败时尝试在线加载
+    if (typeof echarts === "undefined") {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"><\/script>');
+    }
+  </script>
   <script src="/static/app.js"></script>
 </body>
 </html>

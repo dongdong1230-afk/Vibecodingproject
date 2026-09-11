@@ -7,12 +7,14 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from backend.app import app  # noqa: E402
+from backend import database  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 SAMPLE = ROOT / "data" / "sample_upload.csv"
 
 from fastapi.testclient import TestClient  # noqa: E402
 
+database.init_db()  # TestClient 不触发 startup 事件，需显式建表
 client = TestClient(app)
 
 

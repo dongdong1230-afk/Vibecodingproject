@@ -22,9 +22,11 @@ def train_df():
 
 
 def test_load_raw_shape(train_df):
-    assert len(train_df.columns) == 26
+    # compute_rul 会新增 rul 列，因此为 27 列（26 原始列 + rul）
+    assert len(train_df.columns) == 27
     assert train_df["unit"].nunique() == 100
     assert "sensor21" in train_df.columns
+    assert "rul" in train_df.columns
 
 
 def test_rul_range(train_df):

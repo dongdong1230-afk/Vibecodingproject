@@ -39,7 +39,7 @@ def main():
 
     # 1. 训练 LSTM
     print("===== 训练 LSTM =====")
-    lstm, lstm_metrics = train_lstm(X_lstm, y_lstm, epochs=30, verbose=True)
+    lstm, lstm_metrics = train_lstm(X_lstm, y_lstm, hidden=128, epochs=60, verbose=True)
     save_model(lstm, lstm_metrics, sensor_cols, scaler, window, name="lstm_fd001")
     print(f"LSTM 验证 RMSE: {lstm_metrics['val_rmse']:.2f}")
 
@@ -57,7 +57,14 @@ def main():
     import torch
 
     torch.manual_seed(0)
-    model = RulLSTM(n_features=X_test_seq.shape[2])
+    m_meta = __import__("json").loads(
+        (ROOT / "backend/models/lstm_fd001.json").read_text(encoding="utf-8")
+    )
+    model = RulLSTM(
+        n_features=X_test_seq.shape[2],
+        hidden=int(m_meta["arch"]["hidden"]),
+        layers=int(m_meta["arch"]["layers"]),
+    )
     model.load_state_dict(torch.load(
         ROOT / "backend/models/lstm_fd001.pt", map_location="cpu"))
     model.eval()
