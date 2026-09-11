@@ -1,38 +1,52 @@
 @echo off
-chcp 65001 >nul
-echo ============================================
-echo  è®¾å¤‡æ•…éšœ PHM é¢„æµ‹ç³»ç»Ÿ - ä¸€é”®å¯åŠ¨
-echo ============================================
-
+title Éè±¸¹ÊÕÏ PHM Ô¤²âÏµÍ³ - Ò»¼üÆô¶¯
 cd /d "%~dp0"
 
-REM 1. åˆ›å»ºè™šæ‹ŸçŽ¯å¢ƒï¼ˆé¦–æ¬¡è¿è¡Œï¼‰
+echo ============================================
+echo   Éè±¸¹ÊÕÏ PHM Ô¤²âÏµÍ³ - Ò»¼üÆô¶¯
+echo ============================================
+echo.
+
+REM ---------- 0. ·þÎñÒÑÔÚÔËÐÐÔòÖ±½Ó´ò¿ªä¯ÀÀÆ÷ ----------
+curl -s http://127.0.0.1:8000/health 2>nul | findstr "ok" >nul 2>&1
+if not errorlevel 1 (
+    echo ¼ì²âµ½·þÎñÒÑÔÚÔËÐÐ£¬ÕýÔÚÎªÄã´ò¿ªä¯ÀÀÆ÷...
+    start "" http://127.0.0.1:8000
+    ping -n 3 127.0.0.1 >nul
+    exit /b 0
+)
+
+REM ---------- 1. ÐéÄâ»·¾³ÓëÒÀÀµ£¨Ê×´ÎÔËÐÐ×Ô¶¯´î½¨£© ----------
 if not exist ".venv\Scripts\python.exe" (
-    echo [1/3] åˆ›å»ºè™šæ‹ŸçŽ¯å¢ƒ...
-    where python >nul 2>nul
-    if errorlevel 1 (
-        echo æœªæ£€æµ‹åˆ° Pythonï¼Œè¯·å…ˆå®‰è£… Python 3.10+ å¹¶å‹¾é€‰ Add to PATH
-        pause
-        exit /b 1
+    echo [1/4] Ê×´ÎÔËÐÐ£º´´½¨ÐéÄâ»·¾³²¢°²×°ÒÀÀµ£¬ÇëÉÔºò...
+    if exist "C:\Users\LENOVO\anaconda3\python.exe" (
+        "C:\Users\LENOVO\anaconda3\python.exe" -m venv .venv
+    ) else (
+        python -m venv .venv
     )
-    python -m venv .venv
-    .venv\Scripts\python -m pip install -r requirements.txt
+    ".venv\Scripts\python.exe" -m pip install -r requirements.txt
 )
 
-REM 2. æ•°æ®é¢„å¤„ç†ï¼ˆæ— è®­ç»ƒæ ·æœ¬æ—¶ï¼‰
+REM ---------- 2. Êý¾ÝÔ¤´¦Àí£¨ÎÞ²úÎïÊ±Ö´ÐÐ£© ----------
 if not exist "data\processed\test_windows.npz" (
-    echo [2/3] æ•°æ®é¢„å¤„ç†...
-    .venv\Scripts\python scripts\preprocess.py
+    echo [2/4] Êý¾ÝÔ¤´¦Àí...
+    ".venv\Scripts\python.exe" scripts\preprocess.py
 )
 
-REM 3. è®­ç»ƒæ¨¡åž‹ï¼ˆæ— æ¨¡åž‹æ—¶ï¼‰
+REM ---------- 3. ÑµÁ·Ä£ÐÍ£¨ÎÞÄ£ÐÍÊ±Ö´ÐÐ£¬Ô¼ 5 ·ÖÖÓ£© ----------
 if not exist "backend\models\lstm_fd001.pt" (
-    echo [3/3] è®­ç»ƒ LSTM ä¸Žéšæœºæ£®æž—æ¨¡åž‹...
-    .venv\Scripts\python scripts\train.py
+    echo [3/4] ÑµÁ· LSTM ÓëËæ»úÉ­ÁÖÄ£ÐÍ£¨Ê×´ÎÔËÐÐÔ¼ 5 ·ÖÖÓ£©...
+    ".venv\Scripts\python.exe" scripts\train.py
 )
+
+REM ---------- 4. Æô¶¯·þÎñ²¢×Ô¶¯´ò¿ªä¯ÀÀÆ÷ ----------
+echo [4/4] Æô¶¯·þÎñ...
+start "PHMÔ¤²âÏµÍ³·þÎñ" cmd /k ".venv\Scripts\python.exe -m uvicorn backend.app:app --host 127.0.0.1 --port 8000"
+ping -n 6 127.0.0.1 >nul
+start "" http://127.0.0.1:8000
 
 echo.
-echo å¯åŠ¨æœåŠ¡: http://127.0.0.1:8000
-echo æŒ‰ Ctrl+C åœæ­¢æœåŠ¡
-.venv\Scripts\python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
-pause
+echo ·þÎñÒÑÆô¶¯£¬ä¯ÀÀÆ÷ÒÑ×Ô¶¯´ò¿ª¡£
+echo ÌáÊ¾£ººÚÉ«·þÎñ´°¿ÚÇë±£Áô£¬¹Ø±ÕËü¼´Í£Ö¹·þÎñ¡£
+ping -n 3 127.0.0.1 >nul
+exit /b 0
