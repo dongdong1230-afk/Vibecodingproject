@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设备故障 PHM 预测系统</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>设备故障 PHM 预测系统</h1>
+      <p>基于特征工程与 LSTM 的剩余使用寿命（RUL）预测</p>
+    </div>
+    <div class="model-badge" id="model-badge">模型加载中…</div>
+  </header>
+
+  <main class="container">
+    <!-- 上传区 -->
+    <section class="card upload-card">
+      <h2>① 上传设备传感器数据</h2>
+      <p class="hint">支持 C-MAPSS 格式（unit, cycle, setting1-3, sensor1~21）或带表头的传感器 CSV，每行一个飞行循环。</p>
+      <div class="upload-row">
+        <input type="file" id="file-input" accept=".csv,.txt" />
+        <input type="text" id="unit-id" placeholder="设备编号（可选）" />
+        <button id="btn-predict" class="btn-primary">开始预测</button>
+      </div>
+      <div id="upload-tip" class="tip"></div>
+    </section>
+
+    <!-- 预测结果区 -->
+    <section class="card result-card" id="result-card" hidden>
+      <h2>② 预测结果</h2>
+      <div class="result-grid">
+        <div class="metric">
+          <div class="metric-label">剩余使用寿命 RUL</div>
+          <div class="metric-value" id="rul-value">--</div>
+          <div class="metric-unit">飞行循环</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">健康状态</div>
+          <div class="metric-value" id="health-value" style="color:#888">--</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">随机森林基线 RUL</div>
+          <div class="metric-value" id="rf-value">--</div>
+          <div class="metric-unit">飞行循环</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">设备 / 已用循环</div>
+          <div class="metric-value" id="unit-value">--</div>
+        </div>
+      </div>
+      <div class="advice" id="advice">--</div>
+    </section>
+
+    <!-- 趋势图 -->
+    <section class="card chart-card" id="chart-card" hidden>
+      <h2>③ 传感器趋势（最近窗口）</h2>
+      <div id="trend-chart" class="chart"></div>
+    </section>
+
+    <!-- 历史记录 -->
+    <section class="card history-card">
+      <h2>④ 历史预测记录</h2>
+      <button id="btn-refresh" class="btn-secondary">刷新记录</button>
+      <table id="history-table">
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>设备</th>
+            <th>已用循环</th>
+            <th>LSTM RUL</th>
+            <th>RF RUL</th>
+            <th>健康等级</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="footer">
+    制造智能技术课程设计 · NASA C-MAPSS 数据集 · FastAPI + PyTorch LSTM
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
