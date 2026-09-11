@@ -1,0 +1,71 @@
+{
+  "sensor_cols": [
+    "sensor2",
+    "sensor3",
+    "sensor4",
+    "sensor7",
+    "sensor8",
+    "sensor11",
+    "sensor12",
+    "sensor13",
+    "sensor15",
+    "sensor17",
+    "sensor20",
+    "sensor21"
+  ],
+  "scaler": {
+    "sensor2": [
+      641.21,
+      644.53
+    ],
+    "sensor3": [
+      1571.04,
+      1616.91
+    ],
+    "sensor4": [
+      1382.25,
+      1441.49
+    ],
+    "sensor7": [
+      549.85,
+      556.06
+    ],
+    "sensor8": [
+      2387.9,
+      2388.56
+    ],
+    "sensor11": [
+      46.85,
+      48.53
+    ],
+    "sensor12": [
+      518.69,
+      523.38
+    ],
+    "sensor13": [
+      2387.88,
+      2388.56
+    ],
+    "sensor15": [
+      8.3249,
+      8.5848
+    ],
+    "sensor17": [
+      388.0,
+      400.0
+    ],
+    "sensor20": [
+      38.14,
+      39.43
+    ],
+    "sensor21": [
+      22.8942,
+      23.6184
+    ]
+  },
+  "window": 30,
+  "rul_cap": 125,
+  "train_stride": 3,
+  "n_train": 20631,
+  "n_test_units": 100
+}
