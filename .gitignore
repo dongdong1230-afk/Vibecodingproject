@@ -9,8 +9,7 @@ venv/
 backend/models/*.pt
 backend/models/*.pkl
 backend/models/*.joblib
-data/processed/*.npz
-data/processed/*.csv
+data/processed/train_windows.npz
 
 # 系统文件
 Thumbs.db

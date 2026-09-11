@@ -1,0 +1,83 @@
+[
+  {
+    "session": "01-选题与方案设计",
+    "timestamp": "2026-09-11",
+    "topic": "确定课程设计选题并完成方案设计",
+    "prompt_strategy": {
+      "task_decomposition": "先调研选题方向，再确定数据集，最后写方案",
+      "constraints": "场景必须为制造/工业环节；至少覆盖3个课程技术方向；B/S架构完整闭环",
+      "acceptance_criteria": "选题说明含技术方向映射表与架构草图；方案设计含需求分析、方案论证、技术路线、计划、参考文献"
+    },
+    "user_prompt": "基于特征工程与LSTM的设备故障PHM预测系统，数据集用NASA C-MAPSS，B/S架构，帮我完成选题说明和方案设计",
+    "ai_assist": [
+      "梳理C-MAPSS数据集字段与RUL任务定义",
+      "设计技术方向映射（特征工程/机器学习/深度学习LSTM/健康评估）",
+      "输出选题说明.md与方案设计.md框架并逐节完善"
+    ],
+    "outcome": "完成选题说明.md、方案设计.md，技术方向覆盖4个课程专题"
+  },
+  {
+    "session": "02-特征工程与模型设计",
+    "timestamp": "2026-09-11",
+    "topic": "特征工程模块与LSTM/RF模型设计",
+    "prompt_strategy": {
+      "task_decomposition": "先传感器筛选，再滑动窗口特征，再模型结构",
+      "constraints": "PyTorch实现LSTM，输入(batch, window, n_sensor)；RF用窗口统计特征；模型文件与元信息分离保存",
+      "acceptance_criteria": "特征工程函数返回形状正确；模型可训练、可保存、可加载推理"
+    },
+    "user_prompt": "实现特征工程模块（传感器筛选、滑动窗口特征、归一化）和LSTM剩余寿命预测模型，随机森林作基线",
+    "ai_assist": [
+      "用Pearson相关系数筛选与RUL相关的传感器",
+      "窗口统计特征：末值/均值/标准差/斜率",
+      "LSTM取最后时间步输出经全连接回归RUL"
+    ],
+    "outcome": "feature_engineering.py、lstm_model.py、ml_baseline.py 开发完成"
+  },
+  {
+    "session": "03-后端与数据库开发",
+    "timestamp": "2026-09-11",
+    "topic": "FastAPI后端服务与SQLite数据库",
+    "prompt_strategy": {
+      "constraints": "FastAPI+SQLite，接口返回JSON，预测结果入库，前端静态文件由后端托管",
+      "acceptance_criteria": "predict/history/units接口通过测试；单次预测响应<3秒"
+    },
+    "user_prompt": "用FastAPI实现后端：上传数据预测RUL、历史记录查询、单元信息，SQLite持久化",
+    "ai_assist": [
+      "设计predict路由接收multipart文件并编排特征工程→模型→健康评估→入库",
+      "SQLite建表与查询封装"
+    ],
+    "outcome": "backend/app.py、database.py、services/predictor.py 开发完成"
+  },
+  {
+    "session": "04-前端开发与联调",
+    "timestamp": "2026-09-11",
+    "topic": "B/S前端页面与ECharts可视化",
+    "prompt_strategy": {
+      "constraints": "原生HTML/CSS/JS，ECharts画传感器趋势，调用后端API",
+      "acceptance_criteria": "完整业务流程：上传→预测→展示结果与图表→历史记录刷新"
+    },
+    "user_prompt": "开发前端单页应用：上传传感器数据、展示RUL预测结果、健康等级、ECharts趋势图、历史记录表",
+    "ai_assist": [
+      "页面布局与样式",
+      "fetch调用/api/predict与/api/history",
+      "ECharts折线图渲染"
+    ],
+    "outcome": "frontend/index.html、style.css、app.js 完成，前后端联调通过"
+  },
+  {
+    "session": "05-测试与调试",
+    "timestamp": "2026-09-11",
+    "topic": "自动化测试与问题修复",
+    "prompt_strategy": {
+      "constraints": "pytest覆盖特征工程/模型/API",
+      "acceptance_criteria": "全部测试通过；模型缺失时用例优雅跳过",
+      "debug_approach": "最小复现：用单条样例数据定位特征工程维度错误后修复"
+    },
+    "user_prompt": "编写pytest测试并修复暴露的问题",
+    "ai_assist": [
+      "修正last_window_for_unit参数顺序导致的语法错误",
+      "修复测试数据维度断言"
+    ],
+    "outcome": "tests/ 三个测试文件全部通过"
+  }
+]
