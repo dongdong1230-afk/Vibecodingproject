@@ -1,5 +1,0 @@
-﻿product_id,material_id,material_name,require_num,stock_num,safe_stock,gap
-P001,M001,轴承,2,12,5,-10
-P001,M002,传动轴,1,3,5,-2
-P002,M002,传动轴,2,3,5,-1
-P002,M003,密封垫圈,4,20,8,-16
