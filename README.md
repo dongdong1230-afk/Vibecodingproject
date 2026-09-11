@@ -94,7 +94,7 @@ python -m venv .venv
 │   └── 说明.md                 # 数据来源与预处理说明
 ├── tests/                     # pytest 自动化测试
 ├── prompt/                    # AI 对话过程档案
-├── 学习笔记.md / 选题说明.md / 方案设计.md
+├── 学习笔记.md / 选题说明.md / 方案设计.md / 设计说明书.md
 └── start.bat / requirements.txt
 ```
 
